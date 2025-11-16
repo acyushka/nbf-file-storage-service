@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package s3.v1;
+
+option go_package = "s3.v1;s3v1";
+
+service FileStorageService {
+    rpc UploadAvatar(UploadAvatarRequest) returns (UploadAvatarResponse);
+    rpc UploadPhotos(UploadPhotosRequest) returns (UploadPhotosResponse);
+}
+
+message Photo {
+    bytes file_data = 1;
+    string file_name = 2;
+    string content_type = 3;
+}
+
+message UploadAvatarRequest {
+    string user_id = 1;
+    bytes file_data = 2;
+    string file_name = 3;
+    string content_type = 4;
+}
+
+message UploadAvatarResponse {
+    string url = 1;
+}
+
+message UploadPhotosRequest {
+    string user_id = 1;
+    repeated Photo photos = 2;
+}
+
+message UploadPhotosResponse {
+    repeated string urls = 1;
+}
