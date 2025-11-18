@@ -7,7 +7,8 @@ import (
 	"nbf-s3/internal/models"
 	"nbf-s3/internal/storage"
 	"path/filepath"
-	"time"
+
+	"github.com/google/uuid"
 )
 
 type MinioService struct {
@@ -23,8 +24,9 @@ func NewMinioService(s3 *storage.MinioClient, expiryHours int) *MinioService {
 }
 
 func (s *MinioService) UploadAvatar(ctx context.Context, userID string, data io.Reader, fileName string, fileSize int64, contentType string) (string, error) {
+	photoUUID := uuid.New().String()
 	extension := filepath.Ext(fileName)
-	objectName := fmt.Sprintf("%s/avatar%s", userID, extension)
+	objectName := fmt.Sprintf("%s/photos/%s%s", userID, photoUUID, extension)
 
 	_ = s.storage.Delete(ctx, objectName)
 
@@ -32,12 +34,7 @@ func (s *MinioService) UploadAvatar(ctx context.Context, userID string, data io.
 		return "", fmt.Errorf("failed to upload avatar: %w", err)
 	}
 
-	url, err := s.storage.GetPresignedUrl(ctx, objectName, s.expiryHours)
-	if err != nil {
-		return url, fmt.Errorf("failed to get presigned url for avatar: %w", err)
-	}
-
-	return url, nil
+	return photoUUID + extension, nil
 }
 
 func (s *MinioService) UploadPhotos(ctx context.Context, userID string, photos []models.PhotoData) ([]string, error) {
@@ -45,25 +42,35 @@ func (s *MinioService) UploadPhotos(ctx context.Context, userID string, photos [
 		return nil, fmt.Errorf("invalid length slice of photos")
 	}
 
-	var URLs []string
+	var uuids []string
 
 	for i, photo := range photos {
-		timestamp := time.Now().Unix()
+		photoUUID := uuid.New().String()
 		extension := filepath.Ext(photo.FileName)
-		objectName := fmt.Sprintf("%s/form/%d_%d%s", userID, i, timestamp, extension)
+		objectName := fmt.Sprintf("%s/photos/%s%s", userID, photoUUID, extension)
 
 		if err := s.storage.Upload(ctx, objectName, photo.Data, photo.FileSize, photo.ContentType); err != nil {
 			return nil, fmt.Errorf("failed to upload photo %d: %w", i+1, err)
 		}
 
-		url, err := s.storage.GetPresignedUrl(ctx, objectName, s.expiryHours)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get presigned url for photo %d: %w", i+1, err)
-		}
-
-		URLs = append(URLs, url)
+		uuids = append(uuids, photoUUID+extension)
 
 	}
 
-	return URLs, nil
+	return uuids, nil
+}
+
+func (s *MinioService) GetPhotoURL(ctx context.Context, userID string, uuid string) (string, error) {
+	objectName := fmt.Sprintf("%s/photos/%s", userID, uuid)
+
+	if !s.storage.ObjectExists(ctx, objectName) {
+		return "", fmt.Errorf("photo does not exists")
+	}
+
+	url, err := s.storage.GetPresignedUrl(ctx, objectName, s.expiryHours)
+	if err != nil {
+		return "", fmt.Errorf("failed to get presigned url for %s: %w", uuid, err)
+	}
+
+	return url, nil
 }

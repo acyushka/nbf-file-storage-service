@@ -151,7 +151,7 @@ func (x *UploadAvatarRequest) GetContentType() string {
 
 type UploadAvatarResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	PhotoId       string                 `protobuf:"bytes,1,opt,name=photo_id,json=photoId,proto3" json:"photo_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -186,9 +186,9 @@ func (*UploadAvatarResponse) Descriptor() ([]byte, []int) {
 	return file_file_storage_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UploadAvatarResponse) GetUrl() string {
+func (x *UploadAvatarResponse) GetPhotoId() string {
 	if x != nil {
-		return x.Url
+		return x.PhotoId
 	}
 	return ""
 }
@@ -247,7 +247,7 @@ func (x *UploadPhotosRequest) GetPhotos() []*Photo {
 
 type UploadPhotosResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Urls          []string               `protobuf:"bytes,1,rep,name=urls,proto3" json:"urls,omitempty"`
+	PhotoIds      []string               `protobuf:"bytes,1,rep,name=photo_ids,json=photoIds,proto3" json:"photo_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -282,11 +282,107 @@ func (*UploadPhotosResponse) Descriptor() ([]byte, []int) {
 	return file_file_storage_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *UploadPhotosResponse) GetUrls() []string {
+func (x *UploadPhotosResponse) GetPhotoIds() []string {
 	if x != nil {
-		return x.Urls
+		return x.PhotoIds
 	}
 	return nil
+}
+
+type GetPhotoURLRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	PhotoId       string                 `protobuf:"bytes,2,opt,name=photo_id,json=photoId,proto3" json:"photo_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPhotoURLRequest) Reset() {
+	*x = GetPhotoURLRequest{}
+	mi := &file_file_storage_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPhotoURLRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPhotoURLRequest) ProtoMessage() {}
+
+func (x *GetPhotoURLRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_file_storage_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPhotoURLRequest.ProtoReflect.Descriptor instead.
+func (*GetPhotoURLRequest) Descriptor() ([]byte, []int) {
+	return file_file_storage_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetPhotoURLRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *GetPhotoURLRequest) GetPhotoId() string {
+	if x != nil {
+		return x.PhotoId
+	}
+	return ""
+}
+
+type GetPhotoURLResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPhotoURLResponse) Reset() {
+	*x = GetPhotoURLResponse{}
+	mi := &file_file_storage_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPhotoURLResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPhotoURLResponse) ProtoMessage() {}
+
+func (x *GetPhotoURLResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_file_storage_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPhotoURLResponse.ProtoReflect.Descriptor instead.
+func (*GetPhotoURLResponse) Descriptor() ([]byte, []int) {
+	return file_file_storage_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetPhotoURLResponse) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
 }
 
 var File_file_storage_proto protoreflect.FileDescriptor
@@ -302,17 +398,23 @@ const file_file_storage_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1b\n" +
 	"\tfile_data\x18\x02 \x01(\fR\bfileData\x12\x1b\n" +
 	"\tfile_name\x18\x03 \x01(\tR\bfileName\x12!\n" +
-	"\fcontent_type\x18\x04 \x01(\tR\vcontentType\"(\n" +
-	"\x14UploadAvatarResponse\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\"T\n" +
+	"\fcontent_type\x18\x04 \x01(\tR\vcontentType\"1\n" +
+	"\x14UploadAvatarResponse\x12\x19\n" +
+	"\bphoto_id\x18\x01 \x01(\tR\aphotoId\"T\n" +
 	"\x13UploadPhotosRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12$\n" +
-	"\x06photos\x18\x02 \x03(\v2\f.s3.v1.PhotoR\x06photos\"*\n" +
-	"\x14UploadPhotosResponse\x12\x12\n" +
-	"\x04urls\x18\x01 \x03(\tR\x04urls2\xa6\x01\n" +
+	"\x06photos\x18\x02 \x03(\v2\f.s3.v1.PhotoR\x06photos\"3\n" +
+	"\x14UploadPhotosResponse\x12\x1b\n" +
+	"\tphoto_ids\x18\x01 \x03(\tR\bphotoIds\"H\n" +
+	"\x12GetPhotoURLRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x19\n" +
+	"\bphoto_id\x18\x02 \x01(\tR\aphotoId\"'\n" +
+	"\x13GetPhotoURLResponse\x12\x10\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url2\xec\x01\n" +
 	"\x12FileStorageService\x12G\n" +
 	"\fUploadAvatar\x12\x1a.s3.v1.UploadAvatarRequest\x1a\x1b.s3.v1.UploadAvatarResponse\x12G\n" +
-	"\fUploadPhotos\x12\x1a.s3.v1.UploadPhotosRequest\x1a\x1b.s3.v1.UploadPhotosResponseB\fZ\n" +
+	"\fUploadPhotos\x12\x1a.s3.v1.UploadPhotosRequest\x1a\x1b.s3.v1.UploadPhotosResponse\x12D\n" +
+	"\vGetPhotoURL\x12\x19.s3.v1.GetPhotoURLRequest\x1a\x1a.s3.v1.GetPhotoURLResponseB\fZ\n" +
 	"s3.v1;s3v1b\x06proto3"
 
 var (
@@ -327,22 +429,26 @@ func file_file_storage_proto_rawDescGZIP() []byte {
 	return file_file_storage_proto_rawDescData
 }
 
-var file_file_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_file_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_file_storage_proto_goTypes = []any{
 	(*Photo)(nil),                // 0: s3.v1.Photo
 	(*UploadAvatarRequest)(nil),  // 1: s3.v1.UploadAvatarRequest
 	(*UploadAvatarResponse)(nil), // 2: s3.v1.UploadAvatarResponse
 	(*UploadPhotosRequest)(nil),  // 3: s3.v1.UploadPhotosRequest
 	(*UploadPhotosResponse)(nil), // 4: s3.v1.UploadPhotosResponse
+	(*GetPhotoURLRequest)(nil),   // 5: s3.v1.GetPhotoURLRequest
+	(*GetPhotoURLResponse)(nil),  // 6: s3.v1.GetPhotoURLResponse
 }
 var file_file_storage_proto_depIdxs = []int32{
 	0, // 0: s3.v1.UploadPhotosRequest.photos:type_name -> s3.v1.Photo
 	1, // 1: s3.v1.FileStorageService.UploadAvatar:input_type -> s3.v1.UploadAvatarRequest
 	3, // 2: s3.v1.FileStorageService.UploadPhotos:input_type -> s3.v1.UploadPhotosRequest
-	2, // 3: s3.v1.FileStorageService.UploadAvatar:output_type -> s3.v1.UploadAvatarResponse
-	4, // 4: s3.v1.FileStorageService.UploadPhotos:output_type -> s3.v1.UploadPhotosResponse
-	3, // [3:5] is the sub-list for method output_type
-	1, // [1:3] is the sub-list for method input_type
+	5, // 3: s3.v1.FileStorageService.GetPhotoURL:input_type -> s3.v1.GetPhotoURLRequest
+	2, // 4: s3.v1.FileStorageService.UploadAvatar:output_type -> s3.v1.UploadAvatarResponse
+	4, // 5: s3.v1.FileStorageService.UploadPhotos:output_type -> s3.v1.UploadPhotosResponse
+	6, // 6: s3.v1.FileStorageService.GetPhotoURL:output_type -> s3.v1.GetPhotoURLResponse
+	4, // [4:7] is the sub-list for method output_type
+	1, // [1:4] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -359,7 +465,7 @@ func file_file_storage_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_file_storage_proto_rawDesc), len(file_file_storage_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -7,6 +7,7 @@ option go_package = "s3.v1;s3v1";
 service FileStorageService {
     rpc UploadAvatar(UploadAvatarRequest) returns (UploadAvatarResponse);
     rpc UploadPhotos(UploadPhotosRequest) returns (UploadPhotosResponse);
+    rpc GetPhotoURL(GetPhotoURLRequest) returns (GetPhotoURLResponse);
 }
 
 message Photo {
@@ -23,7 +24,7 @@ message UploadAvatarRequest {
 }
 
 message UploadAvatarResponse {
-    string url = 1;
+    string photo_id = 1;
 }
 
 message UploadPhotosRequest {
@@ -32,5 +33,14 @@ message UploadPhotosRequest {
 }
 
 message UploadPhotosResponse {
-    repeated string urls = 1;
+    repeated string photo_ids = 1;
+}
+
+message GetPhotoURLRequest {
+    string user_id = 1;
+    string photo_id = 2;
+}
+
+message GetPhotoURLResponse {
+    string url = 1;
 }

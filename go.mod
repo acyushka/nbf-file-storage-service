@@ -3,6 +3,7 @@ module nbf-s3
 go 1.25.0
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/hesoyamTM/nbf-auth v0.0.0-20251114161533-0328e0ea717a
 	github.com/minio/minio-go/v7 v7.0.97
 	google.golang.org/grpc v1.76.0
@@ -13,7 +14,6 @@ require (
 	github.com/BurntSushi/toml v1.5.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/ilyakaznacheev/cleanenv v1.5.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect

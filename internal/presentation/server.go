@@ -5,7 +5,7 @@ import (
 	"context"
 	"nbf-s3/internal/models"
 	"nbf-s3/internal/service"
-	s3_v1 "nbf-s3/pkg/pb/gen/go"
+	s3_v1 "nbf-s3/pkg/pb/gen"
 
 	"github.com/hesoyamTM/nbf-auth/pkg/logger"
 	"google.golang.org/grpc/codes"
@@ -41,7 +41,7 @@ func (s *MinioServer) UploadAvatar(ctx context.Context, req *s3_v1.UploadAvatarR
 
 	fileReader := bytes.NewReader(req.FileData)
 
-	url, err := s.service.UploadAvatar(ctx, req.GetUserId(), fileReader, req.GetFileName(), int64(len(req.FileData)), req.GetContentType())
+	photo_id, err := s.service.UploadAvatar(ctx, req.GetUserId(), fileReader, req.GetFileName(), int64(len(req.FileData)), req.GetContentType())
 	if err != nil {
 		log.Error("Error: failed to upload avatar")
 		return nil, status.Errorf(codes.Internal, "failed to upload avatar: %v", err)
@@ -50,7 +50,7 @@ func (s *MinioServer) UploadAvatar(ctx context.Context, req *s3_v1.UploadAvatarR
 	log.Info("Avatar uploaded successfuly")
 
 	return &s3_v1.UploadAvatarResponse{
-		Url: url,
+		PhotoId: photo_id,
 	}, nil
 }
 
@@ -75,7 +75,7 @@ func (s *MinioServer) UploadPhotos(ctx context.Context, req *s3_v1.UploadPhotosR
 		}
 	}
 
-	urls, err := s.service.UploadPhotos(ctx, req.GetUserId(), photos)
+	photo_ids, err := s.service.UploadPhotos(ctx, req.GetUserId(), photos)
 	if err != nil {
 		log.Error("Error: failed to upload photos")
 		return nil, status.Errorf(codes.Internal, "failed to upload photos: %v", err)
@@ -84,6 +84,6 @@ func (s *MinioServer) UploadPhotos(ctx context.Context, req *s3_v1.UploadPhotosR
 	log.Info("All photos uploaded successfuly")
 
 	return &s3_v1.UploadPhotosResponse{
-		Urls: urls,
+		PhotoIds: photo_ids,
 	}, nil
 }

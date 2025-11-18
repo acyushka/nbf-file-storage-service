@@ -1,0 +1,13 @@
+env: "dev"
+host: "0.0.0.0"
+port: 60005
+
+minio:
+  endpoint: "minio:9000"
+  access_key: "minioadmin"
+  secret_key: "minioadmin"
+  use_ssl: false
+  bucket: "photos"
+
+presigned_url:
+  expiry_hours: 24

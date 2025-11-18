@@ -114,3 +114,11 @@ func (m *MinioClient) Delete(ctx context.Context, objectName string) error {
 
 	return nil
 }
+
+func (m *MinioClient) ObjectExists(ctx context.Context, objectName string) bool {
+	if _, err := m.client.StatObject(ctx, m.bucketName, objectName, minio.GetObjectOptions{}); err != nil {
+		return false
+	}
+
+	return true
+}

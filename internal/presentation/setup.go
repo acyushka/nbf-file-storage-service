@@ -6,7 +6,7 @@ import (
 	"nbf-s3/internal/config"
 	"nbf-s3/internal/service"
 	"nbf-s3/internal/storage"
-	s3_v1 "nbf-s3/pkg/pb/gen/go"
+	s3_v1 "nbf-s3/pkg/pb/gen"
 	"net"
 
 	"github.com/hesoyamTM/nbf-auth/pkg/logger"

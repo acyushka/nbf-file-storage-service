@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	FileStorageService_UploadAvatar_FullMethodName = "/s3.v1.FileStorageService/UploadAvatar"
 	FileStorageService_UploadPhotos_FullMethodName = "/s3.v1.FileStorageService/UploadPhotos"
+	FileStorageService_GetPhotoURL_FullMethodName  = "/s3.v1.FileStorageService/GetPhotoURL"
 )
 
 // FileStorageServiceClient is the client API for FileStorageService service.
@@ -29,6 +30,7 @@ const (
 type FileStorageServiceClient interface {
 	UploadAvatar(ctx context.Context, in *UploadAvatarRequest, opts ...grpc.CallOption) (*UploadAvatarResponse, error)
 	UploadPhotos(ctx context.Context, in *UploadPhotosRequest, opts ...grpc.CallOption) (*UploadPhotosResponse, error)
+	GetPhotoURL(ctx context.Context, in *GetPhotoURLRequest, opts ...grpc.CallOption) (*GetPhotoURLResponse, error)
 }
 
 type fileStorageServiceClient struct {
@@ -59,12 +61,23 @@ func (c *fileStorageServiceClient) UploadPhotos(ctx context.Context, in *UploadP
 	return out, nil
 }
 
+func (c *fileStorageServiceClient) GetPhotoURL(ctx context.Context, in *GetPhotoURLRequest, opts ...grpc.CallOption) (*GetPhotoURLResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPhotoURLResponse)
+	err := c.cc.Invoke(ctx, FileStorageService_GetPhotoURL_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FileStorageServiceServer is the server API for FileStorageService service.
 // All implementations must embed UnimplementedFileStorageServiceServer
 // for forward compatibility.
 type FileStorageServiceServer interface {
 	UploadAvatar(context.Context, *UploadAvatarRequest) (*UploadAvatarResponse, error)
 	UploadPhotos(context.Context, *UploadPhotosRequest) (*UploadPhotosResponse, error)
+	GetPhotoURL(context.Context, *GetPhotoURLRequest) (*GetPhotoURLResponse, error)
 	mustEmbedUnimplementedFileStorageServiceServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedFileStorageServiceServer) UploadAvatar(context.Context, *Uplo
 }
 func (UnimplementedFileStorageServiceServer) UploadPhotos(context.Context, *UploadPhotosRequest) (*UploadPhotosResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadPhotos not implemented")
+}
+func (UnimplementedFileStorageServiceServer) GetPhotoURL(context.Context, *GetPhotoURLRequest) (*GetPhotoURLResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPhotoURL not implemented")
 }
 func (UnimplementedFileStorageServiceServer) mustEmbedUnimplementedFileStorageServiceServer() {}
 func (UnimplementedFileStorageServiceServer) testEmbeddedByValue()                            {}
@@ -138,6 +154,24 @@ func _FileStorageService_UploadPhotos_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FileStorageService_GetPhotoURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPhotoURLRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileStorageServiceServer).GetPhotoURL(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileStorageService_GetPhotoURL_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileStorageServiceServer).GetPhotoURL(ctx, req.(*GetPhotoURLRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FileStorageService_ServiceDesc is the grpc.ServiceDesc for FileStorageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var FileStorageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadPhotos",
 			Handler:    _FileStorageService_UploadPhotos_Handler,
+		},
+		{
+			MethodName: "GetPhotoURL",
+			Handler:    _FileStorageService_GetPhotoURL_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
