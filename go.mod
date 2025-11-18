@@ -1,4 +1,4 @@
-module nbf-s3
+module nbf-file-storage-service
 
 go 1.25.0
 

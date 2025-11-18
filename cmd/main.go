@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"nbf-s3/internal/config"
-	grpc_server "nbf-s3/internal/presentation"
+	"nbf-file-storage-service/internal/config"
+	grpc_server "nbf-file-storage-service/internal/presentation"
 	"os"
 	"os/signal"
 	"syscall"

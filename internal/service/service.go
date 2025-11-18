@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"nbf-s3/internal/models"
-	"nbf-s3/internal/storage"
+	"nbf-file-storage-service/internal/models"
+	"nbf-file-storage-service/internal/storage"
 	"path/filepath"
 
 	"github.com/google/uuid"

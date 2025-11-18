@@ -3,10 +3,10 @@ package grpc_server
 import (
 	"context"
 	"fmt"
-	"nbf-s3/internal/config"
-	"nbf-s3/internal/service"
-	"nbf-s3/internal/storage"
-	s3_v1 "nbf-s3/pkg/pb/gen"
+	"nbf-file-storage-service/internal/config"
+	"nbf-file-storage-service/internal/service"
+	"nbf-file-storage-service/internal/storage"
+	s3_v1 "nbf-file-storage-service/pkg/pb/gen"
 	"net"
 
 	"github.com/hesoyamTM/nbf-auth/pkg/logger"
