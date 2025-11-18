@@ -87,3 +87,32 @@ func (s *MinioServer) UploadPhotos(ctx context.Context, req *s3_v1.UploadPhotosR
 		PhotoIds: photo_ids,
 	}, nil
 }
+
+func (s *MinioServer) GetPhotoURL(ctx context.Context, req *s3_v1.GetPhotoURLRequest) (*s3_v1.GetPhotoURLResponse, error) {
+	log, err := logger.LoggerFromCtx(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "Failed to init logger")
+	}
+
+	UserID := req.GetUserId()
+	PhotoID := req.GetPhotoId()
+
+	if UserID == "" {
+		log.Error("Error: user_id is empty")
+		return nil, status.Error(codes.InvalidArgument, "user_id is required")
+	}
+	if PhotoID == "" {
+		log.Error("Error: photo_id is empty")
+		return nil, status.Error(codes.InvalidArgument, "photo_id is required")
+	}
+
+	url, err := s.service.GetPhotoURL(ctx, UserID, PhotoID)
+	if err != nil {
+		log.Error("Error: failed to get presigned url")
+		return nil, status.Errorf(codes.Internal, "failed to get presigned url: %v", err)
+	}
+
+	return &s3_v1.GetPhotoURLResponse{
+		Url: url,
+	}, nil
+}
