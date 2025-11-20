@@ -29,6 +29,7 @@ func NewMinioClient(
 			Secure: useSSL,
 		})
 		if err != nil {
+			fmt.Printf("[minio] connect error: %v\n", err)
 			time.Sleep(2 * time.Second)
 			continue
 		}
@@ -37,12 +38,14 @@ func NewMinioClient(
 		bucketExists, err := client.BucketExists(ctx, bucketName)
 		cancel()
 		if err != nil {
+			fmt.Printf("[minio] bucket exists error: %v\n", err)
 			time.Sleep(2 * time.Second)
 			continue
 		}
 
 		if !bucketExists {
 			if err = client.MakeBucket(ctx, bucketName, minio.MakeBucketOptions{}); err != nil {
+				fmt.Printf("[minio] make bucket error: %v\n", err)
 				time.Sleep(2 * time.Second)
 				continue
 			}
@@ -54,6 +57,7 @@ func NewMinioClient(
 		err = client.SetBucketPolicy(ctx, bucketName, policy)
 		cancel()
 		if err != nil {
+			fmt.Printf("[minio] set policy error: %v\n", err)
 			time.Sleep(2 * time.Second)
 			continue
 		}
