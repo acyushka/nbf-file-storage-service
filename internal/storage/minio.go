@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"strings"
 	"time"
 
 	"github.com/minio/minio-go/v7"
@@ -12,12 +11,14 @@ import (
 )
 
 type MinioClient struct {
-	client     *minio.Client
-	bucketName string
+	client       *minio.Client
+	publicClient *minio.Client
+	bucketName   string
 }
 
 func NewMinioClient(
 	endpoint string,
+	publicEndpoint string,
 	accessKey string,
 	secretKey string,
 	useSSL bool,
@@ -55,9 +56,18 @@ func NewMinioClient(
 			continue
 		}
 
+		publicClient, err := minio.New(publicEndpoint, &minio.Options{
+			Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
+			Secure: useSSL,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to create public minio client: %w", err)
+		}
+
 		return &MinioClient{
-			client:     client,
-			bucketName: bucketName,
+			client:       client,
+			publicClient: publicClient,
+			bucketName:   bucketName,
 		}, nil
 	}
 
@@ -82,7 +92,7 @@ func (m *MinioClient) Upload(ctx context.Context, objectName string, data io.Rea
 }
 
 func (m *MinioClient) GetPresignedUrl(ctx context.Context, objectName string, expiryHours int) (string, error) {
-	presignedUrl, err := m.client.PresignedGetObject(
+	presignedUrl, err := m.publicClient.PresignedGetObject(
 		ctx,
 		m.bucketName,
 		objectName,
@@ -93,8 +103,7 @@ func (m *MinioClient) GetPresignedUrl(ctx context.Context, objectName string, ex
 		return "", fmt.Errorf("failed to get presigned url: %w", err)
 	}
 
-	url := strings.Replace(presignedUrl.String(), "minio:9000", "localhost:9000", 1)
-	//url := presignedUrl.String()
+	url := presignedUrl.String()
 
 	return url, nil
 }

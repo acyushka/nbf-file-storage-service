@@ -27,6 +27,7 @@ func NewGrpcServer(ctx context.Context, cfg *config.Config) (*GrpcServer, error)
 	//init storage
 	storageClient, err := storage.NewMinioClient(
 		cfg.Minio.Endpoint,
+		cfg.Minio.PublicEndpoint,
 		cfg.Minio.AccessKey,
 		cfg.Minio.SecretKey,
 		cfg.Minio.UseSSL,
