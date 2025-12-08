@@ -11,9 +11,8 @@ import (
 )
 
 type MinioClient struct {
-	client       *minio.Client
-	publicClient *minio.Client
-	bucketName   string
+	client     *minio.Client
+	bucketName string
 }
 
 func NewMinioClient(
@@ -82,7 +81,7 @@ func (m *MinioClient) Upload(ctx context.Context, objectName string, data io.Rea
 }
 
 func (m *MinioClient) GetPresignedUrl(ctx context.Context, objectName string, expiryHours int) (string, error) {
-	presignedUrl, err := m.publicClient.PresignedGetObject(
+	presignedUrl, err := m.client.PresignedGetObject(
 		ctx,
 		m.bucketName,
 		objectName,
