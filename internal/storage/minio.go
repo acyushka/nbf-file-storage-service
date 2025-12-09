@@ -107,6 +107,10 @@ func (m *MinioClient) GetPresignedUrl(ctx context.Context, objectName string, ex
 	return presignedUrl.String(), nil
 }
 
+func (m *MinioClient) GetPublicUrl(ctx context.Context, objectName string) (string, error) {
+	return fmt.Sprintf("%s/%s/%s", m.publicURL, m.bucketName, objectName), nil
+}
+
 func (m *MinioClient) Delete(ctx context.Context, objectName string) error {
 	if err := m.client.RemoveObject(
 		ctx,

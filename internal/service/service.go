@@ -29,13 +29,16 @@ func (s *MinioService) UploadAvatar(ctx context.Context, userID string, data io.
 	extension := filepath.Ext(fileName)
 	objectName := fmt.Sprintf("%s/photos/%s%s", userID, photoUUID, extension)
 
-	_ = s.storage.Delete(ctx, objectName)
-
 	if err := s.storage.Upload(ctx, objectName, data, fileSize, contentType); err != nil {
 		return "", fmt.Errorf("failed to upload avatar: %w", err)
 	}
 
-	return photoUUID + extension, nil
+	publicURL, err := s.storage.GetPublicUrl(ctx, objectName)
+	if err != nil {
+		return "", fmt.Errorf("failed to get public url: %w", err)
+	}
+
+	return publicURL, nil
 }
 
 func (s *MinioService) UploadPhotos(ctx context.Context, userID string, photos []models.PhotoData) ([]string, error) {
